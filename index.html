@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Eye to Sky  Menu</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #c8a45c;
+  --gold-light: #e8d5a3;
+  --gold-deep: #a8883e;
+  --gold-soft: rgba(200,164,92,0.12);
+  --bg: #08070a;
+  --bg-warm: #100d12;
+  --surface: rgba(255,255,255,0.025);
+  --border: rgba(200,164,92,0.08);
+  --text: #e8e3da;
+  --text-dim: rgba(232,227,218,0.3);
+  --radius: 12px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ===== POOL BACKGROUND ===== */
+#poolBg{
+  position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;
+  object-fit:cover;pointer-events:none;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,200,120,0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at 20% 20%, rgba(255,180,100,0.03) 0%, transparent 30%);
+}
+body::after{
+  content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,
+      rgba(5,10,20,0.2) 0%,
+      rgba(5,25,40,0.35) 30%,
+      rgba(0,35,50,0.55) 55%,
+      rgba(5,15,25,0.85) 100%
+    );
+}
+
+/* ===== WATER RIPPLE OVERLAY ===== */
+#waterCanvas{
+  position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none;
+  opacity:0.12;
+}
+
+/* ===== KEYFRAMES ===== */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(24px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes fadeScale{
+  from{opacity:0;transform:scale(.96) translateY(12px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
+@keyframes shine{
+  0%{background-position:-300% center}
+  100%{background-position:300% center}
+}
+@keyframes breathe{
+  0%,100%{opacity:.4}
+  50%{opacity:.7}
+}
+
+/* ===== SPLASH ===== */
+.splash{
+  position:fixed;inset:0;z-index:9999;
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  background:radial-gradient(ellipse at 50% 30%, #0a1a28 0%, #040a12 60%);
+  animation:fadeIn 1.2s ease;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.splash.hide{animation:fadeOut .8s ease forwards;pointer-events:none}
+@keyframes fadeOut{to{opacity:0;transform:scale(1.06)}}
+.splash-emblem{
+  width:80px;height:80px;
+  border:1px solid rgba(130,200,255,0.1);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;
+  color:rgba(180,230,255,0.6);
+  margin-bottom:28px;
+  animation:breathe 3s ease-in-out infinite;
+  position:relative;
+  background:radial-gradient(circle at 35% 30%, rgba(130,220,255,0.06), transparent 70%);
+  box-shadow:0 0 40px rgba(100,200,255,0.03);
+}
+.splash-emblem::before{
+  content:'';position:absolute;inset:-5px;
+  border:1px solid rgba(130,200,255,0.04);
+  border-radius:50%;
+}
+.splash-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(3.5rem,12vw,7rem);
+  font-weight:300;
+  letter-spacing:14px;
+  color:var(--gold-light);
+  margin-bottom:8px;
+  font-style:italic;
+}
+.splash-sub{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(.8rem,1.8vw,1rem);
+  letter-spacing:8px;
+  text-transform:uppercase;
+  color:rgba(130,200,255,0.15);
+  margin-bottom:40px;
+  font-weight:300;
+}
+.splash-btn{
+  padding:14px 48px;
+  border:1px solid rgba(130,200,255,0.08);
+  background:transparent;
+  color:rgba(180,230,255,0.5);
+  font-size:.8rem;
+  font-family:Inter,sans-serif;
+  letter-spacing:4px;
+  cursor:pointer;
+  transition:all .6s;
+  position:relative;
+  text-transform:uppercase;
+  font-weight:300;
+  border-radius:0;
+}
+.splash-btn::before,.splash-btn::after{
+  content:'';position:absolute;left:50%;transform:translateX(-50%);
+  transition:all .6s;
+}
+.splash-btn::before{
+  top:0;width:80px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(130,200,255,0.15),transparent);
+}
+.splash-btn::after{
+  bottom:0;width:80px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(130,200,255,0.15),transparent);
+}
+.splash-btn:hover::before,.splash-btn:hover::after{width:120px}
+.splash-btn:hover{color:var(--gold-light);letter-spacing:6px;border-color:rgba(130,200,255,0.12)}
+
+/* ===== HEADER ===== */
+.header{
+  position:relative;z-index:5;
+  text-align:center;
+  padding:48px 20px 8px;
+}
+.header-script{
+  font-family:'Cormorant Garamond',serif;
+  font-size:.85rem;font-style:italic;
+  color:rgba(130,200,255,0.2);
+  letter-spacing:2px;
+  margin-bottom:6px;
+}
+.header h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.2rem,6vw,3.6rem);
+  font-weight:300;
+  letter-spacing:12px;
+  text-transform:uppercase;
+  color:var(--gold-light);
+}
+.header-line{
+  width:80px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:14px auto 0;
+}
+.header-sub{
+  font-size:.7rem;
+  letter-spacing:3px;
+  color:var(--text-dim);
+  font-weight:200;
+  margin-top:6px;
+  text-transform:uppercase;
+}
+
+/* ===== SEARCH ===== */
+.search-wrap{
+  position:relative;z-index:10;
+  max-width:380px;margin:20px auto 0;
+  padding:0 20px;
+}
+.search-wrap input{
+  width:100%;
+  padding:11px 44px 11px 18px;
+  border-radius:0;
+  border:none;
+  border-bottom:1px solid rgba(200,164,92,0.08);
+  background:transparent;
+  color:var(--text);
+  font-size:.78rem;
+  font-family:Inter,sans-serif;
+  outline:none;
+  transition:all .4s;
+  font-weight:300;
+  letter-spacing:1px;
+}
+.search-wrap input::placeholder{color:rgba(232,227,218,0.15);letter-spacing:1px;font-weight:300}
+.search-wrap input:focus{border-bottom-color:rgba(200,164,92,0.25)}
+.search-icon{
+  position:absolute;right:24px;top:50%;
+  transform:translateY(-50%);
+  color:rgba(232,227,218,0.1);
+  pointer-events:none;font-size:.7rem;
+}
+
+/* SEARCH RESULTS DROPDOWN */
+.search-results{
+  display:none;
+  position:absolute;top:100%;left:20px;right:20px;
+  background:rgba(8,7,10,.98);
+  border:1px solid rgba(200,164,92,.08);
+  border-top:none;
+  padding:4px 0;
+  max-height:300px;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.8);
+  z-index:100;
+  animation:fadeIn .2s ease;
+}
+.search-results.active{display:block}
+.search-results::-webkit-scrollbar{width:3px}
+.search-results::-webkit-scrollbar-thumb{background:rgba(200,164,92,.12);border-radius:2px}
+.sr-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 16px;cursor:pointer;transition:background .3s;
+}
+.sr-item:hover{background:rgba(200,164,92,.05)}
+.sr-item .name{font-size:.78rem;font-weight:400;color:var(--text);letter-spacing:.3px}
+.sr-item .name em{font-style:normal;color:var(--gold-light);background:rgba(200,164,92,0.08);padding:1px 4px}
+.sr-item .cat{font-size:.6rem;color:var(--text-dim);margin-top:2px;text-transform:uppercase;letter-spacing:1.5px}
+.sr-item .price{font-size:.8rem;font-weight:400;color:var(--gold);letter-spacing:.5px}
+.sr-none{padding:12px 16px;text-align:center;color:var(--text-dim);font-size:.75rem;letter-spacing:1px}
+
+/* ===== FLOATING PEARLS ===== */
+.orbs{
+  position:relative;z-index:5;
+  display:flex;flex-wrap:wrap;
+  justify-content:center;gap:30px;
+  padding:36px 24px 20px;
+  max-width:840px;margin:0 auto;
+}
+.orb{
+  width:120px;height:120px;
+  border-radius:50%;
+  cursor:pointer;
+  position:relative;
+  display:flex;
+  align-items:center;justify-content:center;
+  background:radial-gradient(circle at 32% 25%, rgba(255,255,255,0.03) 0%, rgba(200,164,92,0.02) 30%, rgba(0,0,0,0.15) 100%);
+  border:1px solid rgba(200,164,92,0.1);
+  animation:orbFloat 6s ease-in-out infinite;
+  animation-delay:var(--float-delay,0s);
+  transition:all .7s cubic-bezier(.4,0,.2,1);
+  user-select:none;
+  box-shadow:
+    0 0 30px rgba(200,164,92,0.02),
+    inset 0 0 40px rgba(200,164,92,0.02);
+}
+.orb::before{
+  content:'';position:absolute;inset:-2px;
+  border-radius:50%;
+  background:conic-gradient(from 90deg at 50% 50%, transparent, rgba(200,164,92,0.03), transparent, rgba(200,164,92,0.03), transparent);
+  z-index:-1;
+  animation:orbShimmer 8s linear infinite;
+}
+.orb::after{
+  content:'';position:absolute;inset:2px;
+  border-radius:50%;
+  background:linear-gradient(145deg, rgba(255,255,255,0.03) 0%, transparent 50%);
+  pointer-events:none;
+}
+.orb:hover{
+  transform:scale(1.08);
+  border-color:rgba(200,164,92,0.2);
+  box-shadow:
+    0 0 50px rgba(200,164,92,0.05),
+    0 0 100px rgba(200,164,92,0.02),
+    inset 0 0 50px rgba(200,164,92,0.03);
+}
+.orb-label{
+  font-family:'Cormorant Garamond',serif;
+  font-size:.8rem;
+  font-weight:400;
+  font-style:italic;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.45);
+  text-align:center;
+  line-height:1.3;
+  max-width:95px;
+  transition:color .5s;
+}
+.orb:hover .orb-label{color:rgba(255,255,255,0.8)}
+@keyframes orbFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+}
+@keyframes orbShimmer{
+  0%{opacity:.4}
+  50%{opacity:.8}
+  100%{opacity:.4}
+}
+
+/* ===== MODAL ===== */
+.modal-overlay{
+  display:none;
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,.8);
+  backdrop-filter:blur(24px);
+  justify-content:center;align-items:center;
+  padding:20px;
+}
+.modal-overlay.active{display:flex}
+.modal{
+  background:linear-gradient(160deg,rgba(8,14,24,.98),rgba(6,10,18,.98));
+  border:1px solid rgba(200,164,92,.1);
+  max-width:380px;width:100%;
+  padding:32px 28px;
+  animation:fadeScale .4s ease;
+  box-shadow:0 40px 100px rgba(0,0,0,.9);
+  position:relative;
+}
+.modal-close{
+  position:absolute;top:12px;right:14px;
+  background:none;border:none;color:var(--text-dim);
+  font-size:1.3rem;cursor:pointer;transition:all .3s;line-height:1;
+  width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+}
+.modal-close:hover{color:var(--gold)}
+.modal-cat{
+  font-size:.6rem;text-transform:uppercase;letter-spacing:3px;
+  color:var(--text-dim);margin-bottom:8px;font-weight:300;
+}
+.modal-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.6rem;font-weight:400;
+  margin-bottom:4px;letter-spacing:.5px;
+  color:var(--gold-light);
+}
+.modal-divider{
+  width:40px;height:1px;
+  background:var(--gold);
+  margin:14px 0;
+  opacity:.3;
+}
+.modal-price{
+  font-size:1.1rem;font-weight:300;
+  color:var(--gold);margin-bottom:14px;
+  letter-spacing:1px;
+}
+.modal-desc{
+  font-size:.8rem;line-height:1.7;
+  color:var(--text);opacity:.6;
+  margin-bottom:16px;font-weight:300;
+  letter-spacing:.3px;
+}
+.modal-order-btn{
+  width:100%;padding:12px;
+  border:1px solid rgba(200,164,92,.15);
+  background:transparent;
+  color:var(--gold);
+  font-size:.75rem;font-weight:300;
+  cursor:pointer;transition:all .5s;
+  font-family:Inter,sans-serif;
+  letter-spacing:3px;
+  text-transform:uppercase;
+}
+.modal-order-btn:hover{
+  background:rgba(200,164,92,.06);
+  border-color:rgba(200,164,92,.3);
+  color:var(--gold-light);
+  letter-spacing:5px;
+}
+
+/* ===== CATEGORY OVERLAY ===== */
+.category-overlay{
+  display:none;
+  position:fixed;inset:0;z-index:800;
+  background:rgba(0,0,0,.88);
+  backdrop-filter:blur(32px);
+  justify-content:center;align-items:center;
+  padding:20px;
+}
+.category-overlay.active{display:flex}
+.category-panel{
+  background:linear-gradient(160deg,rgba(10,8,12,.98),rgba(6,5,8,.98));
+  border:1px solid rgba(200,164,92,0.08);
+  width:100%;max-width:520px;
+  max-height:82vh;
+  padding:40px 36px 28px;
+  animation:fadeScale .5s ease;
+  box-shadow:0 50px 120px rgba(0,0,0,.95), 0 0 80px rgba(200,164,92,0.02);
+  position:relative;
+  overflow-y:auto;
+}
+.category-panel::-webkit-scrollbar{width:3px}
+.category-panel::-webkit-scrollbar-thumb{background:rgba(200,164,92,.08);border-radius:2px}
+.category-close{
+  position:absolute;top:14px;right:16px;
+  background:none;border:1px solid transparent;color:var(--text-dim);
+  font-size:1.2rem;cursor:pointer;transition:all .4s;line-height:1;
+  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  border-radius:50%;
+}
+.category-close:hover{color:var(--gold);border-color:rgba(200,164,92,.1)}
+.category-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.6rem;font-weight:300;
+  letter-spacing:8px;
+  text-transform:uppercase;
+  color:var(--gold-light);
+  margin-bottom:0;
+  line-height:1.2;
+}
+.category-title-line{
+  width:60px;height:1px;
+  background:linear-gradient(90deg,var(--gold),transparent);
+  margin:14px 0 20px;
+  opacity:.3;
+}
+.category-items .item-card{
+  display:flex;justify-content:space-between;align-items:baseline;
+  padding:9px 0;
+  animation:fadeUp .5s ease backwards;
+  position:relative;
+  cursor:pointer;
+  transition:all .35s;
+  gap:12px;
+  border-bottom:1px solid rgba(255,255,255,0.015);
+}
+.category-items .item-card:last-child{border-bottom:none}
+.category-items .item-card:hover{
+  padding-left:8px;
+  background:rgba(200,164,92,.02);
+  border-bottom-color:rgba(200,164,92,.04);
+}
+.category-items .item-card-left{
+  display:flex;align-items:baseline;flex:1;min-width:0;
+  gap:10px;
+}
+.category-items .item-card .name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1rem;
+  font-weight:400;
+  letter-spacing:.3px;
+  color:var(--text);
+  white-space:nowrap;
+}
+.category-items .item-card .dots{
+  flex:1;min-width:8px;
+  height:1px;
+  background:repeating-linear-gradient(90deg,rgba(200,164,92,0.06) 0,rgba(200,164,92,0.06) 2px,transparent 2px,transparent 6px);
+  align-self:flex-end;
+  margin-bottom:3px;
+}
+.category-items .item-card .price{
+  font-family:'Cormorant Garamond',serif;
+  font-size:.95rem;
+  font-weight:400;
+  color:var(--gold);
+  white-space:nowrap;
+  letter-spacing:.3px;
+}
+.category-items .sub-header{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1rem;
+  font-weight:500;
+  font-style:italic;
+  color:var(--gold-light);
+  letter-spacing:2px;
+  padding:18px 0 4px;
+  animation:fadeUp .5s ease backwards;
+  position:relative;
+  opacity:.7;
+}
+
+/* ===== FOOTER ===== */
+.footer{
+  position:relative;z-index:5;
+  text-align:center;
+  padding:16px 20px 30px;
+  color:var(--text-dim);
+  font-size:.6rem;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  font-weight:200;
+}
+.footer-line{
+  width:40px;height:1px;
+  background:rgba(200,164,92,0.1);
+  margin:0 auto 12px;
+}
+.footer span{color:var(--gold-light);font-weight:300}
+
+/* ===== CART ===== */
+.cart-fab{
+  position:fixed;bottom:28px;right:24px;z-index:50;
+  width:50px;height:50px;
+  border-radius:50%;
+  border:1px solid rgba(200,164,92,0.1);
+  background:rgba(8,7,10,0.8);
+  backdrop-filter:blur(16px);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  transition:all .4s;
+  box-shadow:0 8px 30px rgba(0,0,0,.5);
+}
+.cart-fab:hover{
+  border-color:rgba(200,164,92,0.2);
+  transform:scale(1.08);
+  box-shadow:0 8px 40px rgba(0,0,0,.6),0 0 30px rgba(200,164,92,0.03);
+}
+.cart-icon{
+  font-size:1.1rem;color:var(--gold);opacity:.7;
+  line-height:1;
+}
+.cart-count{
+  position:absolute;top:-4px;right:-4px;
+  width:20px;height:20px;
+  border-radius:50%;
+  background:var(--gold);
+  color:#08070a;
+  font-size:.6rem;font-weight:600;
+  display:flex;align-items:center;justify-content:center;
+  line-height:1;
+  opacity:0;transform:scale(0);
+  transition:all .3s;
+}
+.cart-count.has-items{opacity:1;transform:scale(1)}
+.cart-overlay{
+  display:none;
+  position:fixed;inset:0;z-index:900;
+  background:rgba(0,0,0,.7);
+  backdrop-filter:blur(16px);
+  justify-content:flex-end;
+}
+.cart-overlay.active{display:flex}
+.cart-panel{
+  width:100%;max-width:360px;
+  background:linear-gradient(180deg,rgba(10,8,12,.98),rgba(6,5,8,.98));
+  border-left:1px solid rgba(200,164,92,0.06);
+  padding:24px 20px;
+  animation:slideIn .4s ease;
+  display:flex;flex-direction:column;
+  height:100%;
+}
+@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+.cart-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:20px;padding-bottom:12px;
+  border-bottom:1px solid rgba(200,164,92,0.06);
+}
+.cart-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.2rem;color:var(--gold-light);letter-spacing:2px;
+}
+.cart-close{
+  background:none;border:none;color:var(--text-dim);
+  font-size:1.3rem;cursor:pointer;transition:color .3s;line-height:1;
+}
+.cart-close:hover{color:var(--gold)}
+.cart-items{flex:1;overflow-y:auto}
+.cart-items::-webkit-scrollbar{width:3px}
+.cart-items::-webkit-scrollbar-thumb{background:rgba(200,164,92,.08);border-radius:2px}
+.cart-empty{
+  text-align:center;color:var(--text-dim);
+  font-size:.8rem;letter-spacing:1px;
+  padding:40px 0;font-weight:300;
+}
+.cart-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 0;
+  border-bottom:1px solid rgba(255,255,255,0.015);
+}
+.cart-item-info{display:flex;flex-direction:column;gap:2px}
+.cart-item-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:.9rem;color:var(--text);
+}
+.cart-item-price{
+  font-size:.75rem;color:var(--gold);font-weight:300;
+}
+.cart-qty{
+  display:flex;align-items:center;gap:8px;
+}
+.cart-qty-btn{
+  width:26px;height:26px;
+  border-radius:50%;
+  border:1px solid rgba(200,164,92,0.1);
+  background:transparent;
+  color:var(--gold);
+  font-size:.85rem;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .3s;
+  line-height:1;
+}
+.cart-qty-btn:hover{
+  border-color:rgba(200,164,92,0.3);
+  background:rgba(200,164,92,0.05);
+}
+.cart-qty-num{
+  font-size:.85rem;color:var(--text);min-width:16px;text-align:center;
+}
+.cart-item-remove{
+  background:none;border:none;color:var(--text-dim);
+  font-size:.8rem;cursor:pointer;padding:0 4px;
+  transition:color .3s;line-height:1;
+}
+.cart-item-remove:hover{color:#ff6b6b}
+.cart-total{
+  text-align:right;
+  padding-top:12px;margin-top:12px;
+  border-top:1px solid rgba(200,164,92,0.08);
+  font-size:.9rem;color:var(--gold-light);
+  letter-spacing:1px;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(200,164,92,.08);border-radius:2px}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:640px){
+  .orbs{gap:18px;padding:20px 16px}
+  .orb{width:85px;height:85px}
+  .orb-icon{font-size:1.1rem}
+  .orb-label{font-size:.55rem;letter-spacing:1px;max-width:70px}
+  .category-panel{padding:28px 18px}
+  .header h1{letter-spacing:8px}
+  .splash-logo{letter-spacing:10px}
+  .category-items .item-card .dots{display:none}
+  .category-items .item-card .name{font-size:.9rem}
+  .modal{padding:24px 20px}
+  .cart-fab{bottom:16px;right:16px;width:44px;height:44px}
+  .cart-panel{max-width:100%}
+}
+</style>
+</head>
+<body>
+<img src="infinity_pool_25.jpeg" id="poolBg" alt="">
+<canvas id="waterCanvas"></canvas>
+
+<!-- SPLASH -->
+<div class="splash" id="splash">
+  <div class="splash-emblem">&#9678;</div>
+  <div class="splash-logo">Eye to Sky</div>
+  <div class="splash-sub">Lounge &middot; Bar &middot; Kitchen</div>
+  <button class="splash-btn" onclick="enterSite()">Enter</button>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-script">our offerings</div>
+  <h1>A menu for the discerning</h1>
+  <p class="header-sub">Select a category to discover</p>
+  <div class="header-line"></div>
+</header>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <input type="text" id="searchInput" placeholder="Search any item, flavor, or ingredient..." oninput="handleSearch()" onblur="hideSearch()" onfocus="handleSearch()" autocomplete="off">
+  <span class="search-icon">&#9906;</span>
+  <div class="search-results" id="searchResults"></div>
+</div>
+
+<!-- ORBS -->
+<div class="orbs" id="orbs"></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div class="modal-cat" id="modalCat"></div>
+    <div class="modal-name" id="modalName"></div>
+    <div class="modal-divider"></div>
+    <div class="modal-price" id="modalPrice"></div>
+    <div class="modal-desc" id="modalDesc"></div>
+    <button class="modal-order-btn" id="modalOrderBtn">Add to Order</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-line"></div>
+  Made with <span>&#9829;</span> &middot; Eye to Sky Lounge
+</div>
+
+<!-- CATEGORY OVERLAY -->
+<div class="category-overlay" id="categoryOverlay" onclick="closeCategoryOverlay(event)">
+  <div class="category-panel">
+    <button class="category-close" onclick="closeCategoryOverlay()">&times;</button>
+    <div class="category-title" id="categoryTitle"></div>
+    <div class="category-items" id="categoryItems"></div>
+  </div>
+</div>
+
+<!-- CART BUTTON -->
+<div class="cart-fab" id="cartFab" onclick="toggleCart()">
+  <span class="cart-icon">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+    </svg>
+  </span>
+  <span class="cart-count" id="cartCount">0</span>
+</div>
+
+<!-- CART PANEL -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart(event)">
+  <div class="cart-panel">
+    <div class="cart-header">
+      <span class="cart-title">Your Order</span>
+      <button class="cart-close" onclick="toggleCart()">&times;</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">No items added yet</div>
+    </div>
+    <div class="cart-total" id="cartTotal"></div>
+  </div>
+</div>
+
+<script>
+// ===== MENU DATA =====
+const MENU_RAW = {
+  cocktails:{label:"Cocktails",icon:"🍸",items:[["dry martini","$9"],["dirty martini","$9"],["passion fruit martini","$10"],["sex on the beach","$8"],["long island","$10"],["margarita","$8"],["strawberry margarita","$8"],["classic mojito","$8"],["apperolspritz","$8"],["piña colada","$8"],["cuba libre","$8"],["gin basil","$8"],["gin tonic","$6"],["tequila sunrise","$8"],["midori sour","$8"],["whiskey sour","$8"],["daiquiri","$8"]]},
+  bottles:{label:"Bottles",icon:"🥃",items:[["𝔀𝓱𝓲𝓼𝓴𝓮𝔂",""],["jameson","Glass $8 | Bottle $80"],["chivas 12","Glass $12 | Bottle $100"],["red label","Glass $7 | Bottle $70"],["black label","Glass $9 | Bottle $100"],["gold label","Glass $15 | Bottle $150"],["glenfidich 12","Glass $12 | Bottle $140"],["𝓿𝓸𝓭𝓴𝓪",""],["russian","Glass $7 | Bottle $70"],["stoli red","Glass $7 | Bottle $70"],["greygoose","Glass $12 | Bottle $120"],["𝓰𝓲𝓷",""],["gordons","Glass $7 | Bottle $70"],["tanqueray 10","Glass $12 | Bottle $130"],["𝔀𝓲𝓷𝓮",""],["ksara rose sunset","Glass $7 | Bottle $25"],["ksara red","Glass $7 | Bottle $25"],["ixir grand reserve blanc","Bottle $50"],["ixir grand reserve  rose","Bottle $50"],["ixir altitude white 375ml","Bottle $15"],["ixir altitude red 375ml","Bottle $15"],["𝓽𝓮𝓺𝓾𝓲𝓵𝓪",""],["jose cuervo silver","Glass $7 | Bottle $70"],["jose cuervo gold","Glass $8 | Bottle $80"],["𝓻𝓾𝓶",""],["capitan morgan white","Glass $7 | Bottle $70"],["capitan morgan spiced","Glass $9 | Bottle $90"],["capitan morgan dark","Glass $8 | Bottle $80"],["𝓹𝓻𝓸𝓼𝓮𝓬𝓬𝓸",""],["botega white","Glass $9 | Bottle $60"],["botega gold","Bottle $100"],["𝓵𝓲𝓺𝓾𝓮𝓾𝓻",""],["Jägermeister","Glass $7 | Bottle $70"],["arak","Glass $7 | Bottle $70"]]},
+  shots:{label:"Shots",icon:"🥃",items:[["premium shots","$4"],["regular shots","$3"]]},
+  beers:{label:"Beers",icon:"🍺",items:[["Heineken","$6"],["corona","$6"],["almaza 25cl","$3"],["almaza 33cl","$5"],["almaza light","$5"],["almaza rose","$5"]]},
+  coffee:{label:"Coffee",icon:"☕",items:[["𝓮𝔂𝓮 𝓽𝓸 𝓼𝓴𝔂 𝓼𝓹𝓮𝓬𝓲𝓪𝓵",""],["specialty drink","$6.5"],["salted frappe","$6"],["caramel frappe","$6"],["espresso frappe","$5"],["𝓱𝓸𝓽 𝓭𝓻𝓲𝓷𝓴𝓼",""],["espresso","$2.5"],["double espresso","$4"],["Cappuccino","$5"],["cafe latte","$5"],["piccolo","$3.5"],["cortodo","$4.5"],["americano","$4"],["macchiato","$4.5"],["nescafe","$3.5"],["spanish latte","$6"],["hot matcha","$6"],["hot chocolate mocha","$6"],["hot white mocha","$6"],["hot caramel mocha","$6"],["salted latte","$6"],["hot chocolate","$6"],["specialty hot chocolate","$7"],["lebanese coffe","$3"],["flat white","$5"],["𝓬𝓸𝓵𝓭 𝓭𝓻𝓲𝓷𝓴𝓼",""],["ice latte","$5"],["ice spanish latte","$6"],["ice mocha chocolate/caramel/white","$6"],["ice caramel macchiato","$6"],["ice matcha","$6"],["𝓪𝓭𝓭 𝓸𝓷𝓼",""],["flavors:vanilla/caramel/salted caramel","$0.80"],["suggar free flavors:vanilla/caramel","$0.80"],["skimmed milk","$0"],["lactose free","$1"],["oat milk","$1.5"],["coconut milk","$1.5"],["almond milk","$1.5"],["caramel sauce","$1"],["chocolate sauce","$1"],["white sauce","$1"]]},
+  smoothiesshakes:{label:"Smoothies & Shakes",icon:"🥤",items:[["𝓼𝓶𝓸𝓸𝓽𝓱𝓲𝓮𝓼",""],["strawberry","$5"],["mango","$5"],["tropical","$5.5"],["forest","$5"],["𝓼𝓱𝓪𝓴𝓮𝓼",""],["vanilla","$6"],["chocolate","$6"],["strawberry","$6"],["mango","$6"],["pinacolada virgin","$6"],["cookies","$6"],["cookies strawberry","$6"]]},
+  tea:{label:"Tea",icon:"🍵",items:[["tea","$3"],["𝓲𝓬𝓮 𝓽𝓮𝓪",""],["peach","$4"],["lemon berry","$4"],["lemon passion","$4"]]},
+  icecream:{label:"Ice Cream",icon:"🍦",items:[["diet king vanila","$2"],["diet king chocolate","$2"],["king crunchy","$2"],["king vanilla","$2"],["king chocolate","$2"],["paradiso cheescacke","$2"],["paradiso pistachio","$2"],["paradiso chocolate","$2"],["paradiso achta","$2"],["les saveurs chocolate fudge","$2"],["les saveurs cheesecake","$2"],["les saveurs achta","$2"],["les saveurs pistachio","$2"],["minimax vanilla","$1"],["minimax chocolate","$1"],["krazy kone vanilla","$1"],["krazy kone chocolate","$1"],["krazy kone strawberry","$1"],["tubby chocolate","$0.50"],["tubby vanilla","$0.50"],["tubby strawberry","$0.50"],["imperiale vanilla strawberry chocolate","$0.50"],["taxi vanilla","$0.50"],["princesse blackberry","$0.50"],["princesse strawberry","$0.50"],["flipper lemon","$0.50"],["flipper strawberry","$0.50"],["fuji vanilla","$0.50"],["fuji chocolate","$0.50"],["jolly blackberry","$0.50"],["jolly orange","$0.50"],["jolly chocolate","$0.50"],["jolly strawberry","$0.50"],["jolly blackberry diet","$0.50"],["jolly chocolate diet","$0.50"],["jolly lemon diet","$0.50"]]},
+  food:{label:"Food",icon:"🍔",items:[["𝓽𝓸 𝓼𝓱𝓪𝓻𝓮",""],["Mini burgers","$10"],["Mozzarella sticks","$6"],["Halloumi Bites, side sauce","$7"],["Jalapenos & cheddar bites, barbecue sauce","$7"],["French fries, house sauce","$5"],["Wedges, Aioli sauce","$6"],["Dynamite Chicken","$8"],["Crunchy Chicken bites, honey mustard sauce","$8"],["Nachos & Cheese","$10"],["𝓼𝓪𝓵𝓪𝓭𝓼",""],["Classic Caesar","$13"],["Watermelon & greek fetta","$15"],["Chili Crab Stick Salad","$14"],["Little green","$11"],["𝓫𝓾𝓻𝓰𝓮𝓻𝓼 & 𝓼𝓪𝓷𝓭𝔀𝓲𝓬𝓱𝓮𝓼",""],["Classic Cheese","$13"],["Big Man","$16"],["Truffle Joy","$14"],["Light Beef Burger","$13"],["Mighty Grilled Chicken","$13"],["Honey Mustard Chicken","$12"],["Hot Honey Chicken","$12"],["Steak & Mushroom","$14"],["Club Sandwich","$13"],["Taouk Wrap","$10"],["Chicken Fajitas","$12"],["𝓶𝓪𝓲𝓷 𝓬𝓸𝓾𝓻𝓼𝓮𝓼",""],["Grilled Chicken Breast","$16"],["Chicken Funghi","$18"],["Steak & Fries","$20"],["Crunchy Chicken Milanese","$14"],["Italian Chicken Parmigiana","$18"],["Golden Crispy Chicken platter","$14"]]},
+  "mixednuts&chips":{label:"Mixed Nuts & Chips",icon:"🥜",items:[["Wagyu Burger","$18"],["Truffle Fries","$9"],["Nachos","$10"],["Caesar Salad","$12"]]},
+  soft:{label:"Soft Drinks",icon:"🥤",items:[["pepsi","$2"],["pepsi diet","$2"],["7UP","$2"],["7UP diet","$2"],["st.pelegrino","$3"],["lipton iced tea","$2"],["lipton iced tea diet","$2"],["redbull","$5"],["redbull light","$5"],["dark blue","$3"]]},
+  tabaco:{label:"Tabaco",icon:"💨",items:[["Double Apple","$10"],["lemon mint","$10"],["Grape mint","$10"],["gum mint","$10"]]}
+};
+
+const DATA = [];
+const CATS = [];
+for (const [id, cat] of Object.entries(MENU_RAW)) {
+  CATS.push({id, label:cat.label, icon:cat.icon});
+  cat.items.forEach(([name, price]) => {
+    DATA.push({name, cat:id, price:price === "" ? null : price, isHeader: price === ""});
+  });
+}
+
+// ===== STATE =====
+let activeCat = "cocktails";
+let orders = [];
+
+// ===== CART =====
+function updateCartUI(){
+  const count = document.getElementById("cartCount");
+  const total = orders.reduce((s,o) => s + o.qty, 0);
+  count.textContent = total;
+  count.classList.toggle("has-items", total > 0);
+}
+function addOrder(item){
+  const existing = orders.find(o => o.name === item.name && o.price === item.price);
+  if(existing){ existing.qty++; }
+  else { orders.push({...item, qty: 1}); }
+  updateCartUI();
+  renderCart();
+}
+function adjustOrder(idx, delta){
+  const o = orders[idx];
+  o.qty += delta;
+  if(o.qty <= 0){ orders.splice(idx, 1); }
+  updateCartUI();
+  renderCart();
+}
+function renderCart(){
+  const el = document.getElementById("cartItems");
+  if(!orders.length){
+    el.innerHTML = '<div class="cart-empty">No items added yet</div>';
+    document.getElementById("cartTotal").textContent = "";
+    return;
+  }
+  el.innerHTML = orders.map((o,i) => `
+    <div class="cart-item">
+      <div class="cart-item-info">
+        <span class="cart-item-name">${o.name}</span>
+        <span class="cart-item-price">${o.price||""}</span>
+      </div>
+      <div class="cart-qty">
+        <button class="cart-qty-btn" onclick="adjustOrder(${i}, -1)">&minus;</button>
+        <span class="cart-qty-num">${o.qty}</span>
+        <button class="cart-qty-btn" onclick="adjustOrder(${i}, 1)">+</button>
+      </div>
+    </div>
+  `).join("");
+  const total = orders.reduce((sum, o) => {
+    if(!o.price) return sum;
+    const num = parseFloat(o.price.replace(/[^0-9.]/g, ""));
+    return sum + (isNaN(num) ? 0 : num * o.qty);
+  }, 0);
+  document.getElementById("cartTotal").textContent = `Total: $${total.toFixed(2)}`;
+}
+function toggleCart(e){
+  if(e && e.target !== document.getElementById("cartOverlay") && e.target !== e.currentTarget) return;
+  document.getElementById("cartOverlay").classList.toggle("active");
+  if(document.getElementById("cartOverlay").classList.contains("active")) renderCart();
+}
+
+// ===== RENDER =====
+function renderOrbs(){
+  const el = document.getElementById("orbs");
+  el.innerHTML = CATS.map((c,i) => `
+    <div class="orb" data-cat="${c.id}" style="--float-dur:${3.5+(i%5)*0.8}s;--float-delay:${i*0.12}s">
+      <span class="orb-label">${c.label}</span>
+    </div>
+  `).join("");
+  el.querySelectorAll(".orb").forEach(btn => {
+    btn.addEventListener("click",()=>{
+      openCategory(btn.dataset.cat);
+    });
+  });
+}
+
+function openCategory(id){
+  activeCat = id;
+  const cat = CATS.find(c => c.id === id);
+  const items = DATA.filter(i => i.cat === id);
+  document.getElementById("categoryTitle").innerHTML = `${cat.label}<div class="category-title-line"></div>`;
+  const el = document.getElementById("categoryItems");
+  el.innerHTML = items.map((item,i) => {
+    if(item.isHeader){
+      return `<div class="sub-header" style="animation-delay:${i*0.04}s">${item.name}</div>`;
+    }
+    return `
+      <div class="item-card" style="animation-delay:${i*0.04}s" data-name="${item.name}">
+        <div class="item-card-left">
+          <span class="name">${item.name}</span>
+          <span class="dots"></span>
+        </div>
+        <span class="price">${item.price}</span>
+      </div>
+    `;
+  }).join("");
+  el.querySelectorAll(".item-card").forEach(card => {
+    card.addEventListener("click",()=>{
+      const name = card.dataset.name;
+      const item = DATA.find(i => i.name === name);
+      if(item){ closeCategoryOverlay(); openModal(item); }
+    });
+  });
+  document.getElementById("categoryOverlay").classList.add("active");
+  document.body.style.overflow = "hidden";
+}
+function closeCategoryOverlay(e){
+  if(e && e.target !== document.getElementById("categoryOverlay") && e.target !== e.currentTarget) return;
+  document.getElementById("categoryOverlay").classList.remove("active");
+  document.body.style.overflow = "";
+}
+
+// ===== MODAL =====
+function openModal(item){
+  document.getElementById("modalCat").textContent = CATS.find(c=>c.id===item.cat)?.label||"";
+  document.getElementById("modalName").textContent = item.name;
+  document.getElementById("modalPrice").textContent = item.price || "";
+  document.getElementById("modalDesc").textContent = "";
+  document.getElementById("modalOverlay").classList.add("active");
+  document.body.style.overflow = "hidden";
+  const btn = document.getElementById("modalOrderBtn");
+  btn.textContent = "Add to Order";
+  btn.onclick = () => {
+    addOrder(item);
+    btn.textContent = "✓ Added";
+    btn.style.borderColor = "rgba(200,164,92,0.3)";
+    btn.style.color = "var(--gold-light)";
+    setTimeout(() => {
+      btn.textContent = "Add to Order";
+      btn.style.borderColor = "";
+      btn.style.color = "";
+    }, 1500);
+  };
+}
+function closeModal(e){
+  if(e && e.target !== document.getElementById("modalOverlay") && e.target !== e.currentTarget) return;
+  document.getElementById("modalOverlay").classList.remove("active");
+  document.body.style.overflow = "";
+}
+
+// ===== SEARCH =====
+function handleSearch(){
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  const box = document.getElementById("searchResults");
+  if(!q){box.classList.remove("active");box.innerHTML="";return}
+
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})`,"gi");
+  const matches = DATA.filter(i => {
+    if(i.isHeader) return false;
+    const haystack = (i.name+" "+i.cat).toLowerCase();
+    return haystack.includes(q);
+  }).slice(0,8);
+
+  box.innerHTML = "";
+  if(!matches.length){
+    box.innerHTML = `<div class="sr-none">No results for "${q}"</div>`;
+  } else {
+    matches.forEach(m => {
+      const div = document.createElement("div");
+      div.className = "sr-item";
+      const hiName = m.name.replace(re,"<em>$1</em>");
+      const catLabel = CATS.find(c=>c.id===m.cat)?.label||"";
+      div.innerHTML = `
+        <div>
+          <div class="name">${hiName}</div>
+          <div class="cat">${catLabel}</div>
+        </div>
+          <div class="price">${m.price||""}</div>
+      `;
+      div.addEventListener("mousedown",e=>{
+        e.preventDefault();
+        box.classList.remove("active");
+        document.getElementById("searchInput").value="";
+        closeCategoryOverlay();
+        openModal(m);
+      });
+      box.appendChild(div);
+    });
+  }
+  box.classList.add("active");
+}
+function hideSearch(){
+  setTimeout(()=>document.getElementById("searchResults").classList.remove("active"),200);
+}
+
+// ===== SPLASH =====
+function enterSite(){
+  const s = document.getElementById("splash");
+  s.classList.add("hide");
+  setTimeout(()=>s.remove(),700);
+}
+
+// ===== WATER RIPPLES =====
+(function initWater(){
+  const c = document.getElementById("waterCanvas");
+  const ctx = c.getContext("2d");
+  let W,H;
+  function resize(){
+    W=c.width=window.innerWidth;
+    H=c.height=window.innerHeight;
+  }
+  resize();
+  window.addEventListener("resize",resize);
+  const layers = [];
+  for(let i=12;i--;){
+    layers.push({
+      y:Math.random()*H, amp:2+Math.random()*6,
+      freq:.005+Math.random()*.02, speed:(.3+Math.random()*.8)*(Math.random()>.5?1:-1),
+      phase:Math.random()*Math.PI*2, alpha:.04+Math.random()*.08
+    });
+  }
+  const sparks = [];
+  for(let i=30;i--;){
+    sparks.push({
+      x:Math.random()*W, y:20+Math.random()*H*.6,
+      r:1+Math.random()*2.5, a:Math.random(), da:(.005+Math.random()*.015)*(Math.random()>.5?1:-1),
+      speed:.1+Math.random()*.3
+    });
+  }
+  function draw(t){
+    ctx.clearRect(0,0,W,H);
+    for(const l of layers){
+      ctx.beginPath();
+      ctx.moveTo(0,l.y+Math.sin(t*l.speed+l.phase)*l.amp);
+      const steps = Math.ceil(W/40);
+      for(let i=1;i<=steps;i++){
+        const x=i/steps*W;
+        ctx.lineTo(x,l.y+Math.sin(x*l.freq+t*l.speed+l.phase)*l.amp);
+      }
+      ctx.strokeStyle=`rgba(180,220,255,${l.alpha})`;
+      ctx.lineWidth=.8;
+      ctx.stroke();
+    }
+    for(const s of sparks){
+      s.a+=s.da;
+      if(s.a>1||s.a<0){s.da*=-1}
+      s.y-=s.speed;
+      if(s.y<-10){s.y=H*.6+10;s.x=Math.random()*W}
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,220,160,${s.a*.4})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw(0);
+})();
+
+// ===== INIT =====
+renderOrbs();
+</script>
+</body>
+</html>
