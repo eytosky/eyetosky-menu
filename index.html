@@ -359,8 +359,30 @@ body::after{
 }
 .modal-price{
   font-size:1.1rem;font-weight:300;
-  color:var(--gold);margin-bottom:14px;
+  color:var(--gold);margin-bottom:6px;
   letter-spacing:1px;
+}
+.size-selector{
+  display:none;gap:8px;
+  margin-bottom:14px;
+}
+.size-selector.active{display:flex}
+.size-btn{
+  flex:1;padding:8px;
+  border:1px solid rgba(200,164,92,.12);
+  background:transparent;
+  color:var(--text-dim);
+  font-size:.7rem;font-weight:300;
+  cursor:pointer;transition:all .4s;
+  font-family:Inter,sans-serif;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+.size-btn:hover{border-color:rgba(200,164,92,.25);color:var(--text)}
+.size-btn.active{
+  border-color:var(--gold);
+  color:var(--gold);
+  background:rgba(200,164,92,.06);
 }
 .modal-desc{
   font-size:.8rem;line-height:1.7;
@@ -690,6 +712,7 @@ body::after{
     <div class="modal-name" id="modalName"></div>
     <div class="modal-divider"></div>
     <div class="modal-price" id="modalPrice"></div>
+    <div class="size-selector" id="sizeSelector"></div>
     <div class="modal-desc" id="modalDesc"></div>
     <button class="modal-order-btn" id="modalOrderBtn">Add to Order</button>
   </div>
@@ -738,7 +761,7 @@ body::after{
 <script>
 // ===== MENU DATA =====
 const MENU_RAW = {
-  cocktails:{label:"Cocktails",icon:"🍸",items:[["espresso martini","$9"],["irish coffe","$9"],["dry martini","$9"],["dirty martini","$9"],["passion fruit martini","$10"],["sex on the beach","$8"],["long island","$10"],["margarita","$8"],["strawberry margarita","$8"],["classic mojito","$8"],["apperolspritz","$8"],["piña colada","$8"],["cuba libre","$8"],["gin basil","$8"],["gin tonic","$6"],["tequila sunrise","$8"],["midori sour","$8"],["whiskey sour","$8"],["daiquiri","$8"]]},
+  cocktails:{label:"Cocktails",icon:"🍸",items:[["dry martini","$9"],["dirty martini","$9"],["passion fruit martini","$10"],["espresso martini","$9"],["irish coffe","$9"],["sex on the beach","$8"],["long island","$10"],["margarita","$8"],["strawberry margarita","$8"],["classic mojito","$8"],["apperolspritz","$8"],["piña colada","$8"],["cuba libre","$8"],["gin basil","$8"],["gin tonic","$6"],["tequila sunrise","$8"],["midori sour","$8"],["whiskey sour","$8"],["daiquiri","$8"]]},
   bottles:{label:"Bottles",icon:"🥃",items:[["𝔀𝓱𝓲𝓼𝓴𝓮𝔂",""],["jameson","Glass $8 | Bottle $80"],["chivas 12","Glass $12 | Bottle $100"],["red label","Glass $7 | Bottle $70"],["black label","Glass $9 | Bottle $100"],["gold label","Glass $15 | Bottle $150"],["glenfidich 12","Glass $12 | Bottle $140"],["𝓿𝓸𝓭𝓴𝓪",""],["russian","Glass $7 | Bottle $70"],["stoli red","Glass $7 | Bottle $70"],["greygoose","Glass $12 | Bottle $120"],["𝓰𝓲𝓷",""],["gordons","Glass $7 | Bottle $70"],["tanqueray 10","Glass $12 | Bottle $130"],["𝔀𝓲𝓷𝓮",""],["ksara rose sunset","Glass $7 | Bottle $25"],["ksara red","Glass $7 | Bottle $25"],["ixir grand reserve blanc","Bottle $50"],["ixir grand reserve  rose","Bottle $50"],["ixir altitude white 375ml","Bottle $15"],["ixir altitude red 375ml","Bottle $15"],["𝓽𝓮𝓺𝓾𝓲𝓵𝓪",""],["jose cuervo silver","Glass $7 | Bottle $70"],["jose cuervo gold","Glass $8 | Bottle $80"],["𝓻𝓾𝓶",""],["capitan morgan white","Glass $7 | Bottle $70"],["capitan morgan spiced","Glass $9 | Bottle $90"],["capitan morgan dark","Glass $8 | Bottle $80"],["𝓹𝓻𝓸𝓼𝓮𝓬𝓬𝓸",""],["botega white","Glass $9 | Bottle $60"],["botega gold","Bottle $100"],["𝓵𝓲𝓺𝓾𝓮𝓾𝓻",""],["Jägermeister","Glass $7 | Bottle $70"],["arak","Glass $7 | Bottle $70"]]},
   shots:{label:"Shots",icon:"🥃",items:[["premium shots","$4"],["regular shots","$3"]]},
   beers:{label:"Beers",icon:"🍺",items:[["Heineken","$6"],["corona","$6"],["almaza 25cl","$3"],["almaza 33cl","$5"],["almaza light","$5"],["almaza rose","$5"]]},
@@ -808,7 +831,7 @@ function renderCart(){
   `).join("");
   const total = orders.reduce((sum, o) => {
     if(!o.price) return sum;
-    const num = parseFloat(o.price.replace(/[^0-9.]/g, ""));
+    const num = parseFloat(o.price.split("|")[0].replace(/[^0-9.]/g, ""));
     return sum + (isNaN(num) ? 0 : num * o.qty);
   }, 0);
   document.getElementById("cartTotal").textContent = `Total: $${total.toFixed(2)}`;
@@ -878,10 +901,34 @@ function openModal(item){
   document.getElementById("modalDesc").textContent = "";
   document.getElementById("modalOverlay").classList.add("active");
   document.body.style.overflow = "hidden";
+
+  const sel = document.getElementById("sizeSelector");
+  sel.innerHTML = "";
+  sel.classList.remove("active");
+  let selectedPrice = item.price;
+
+  if(item.price && item.price.includes("|")){
+    const parts = item.price.split("|").map(s => s.trim());
+    sel.classList.add("active");
+    let activeIdx = 0;
+    parts.forEach((p, i) => {
+      const btn = document.createElement("button");
+      btn.className = "size-btn" + (i === 0 ? " active" : "");
+      btn.textContent = p;
+      btn.onclick = () => {
+        sel.querySelectorAll(".size-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        selectedPrice = p;
+      };
+      sel.appendChild(btn);
+    });
+  }
+
   const btn = document.getElementById("modalOrderBtn");
   btn.textContent = "Add to Order";
   btn.onclick = () => {
-    addOrder(item);
+    const itemToAdd = {...item, price: selectedPrice};
+    addOrder(itemToAdd);
     btn.textContent = "✓ Added";
     btn.style.borderColor = "rgba(200,164,92,0.3)";
     btn.style.color = "var(--gold-light)";
