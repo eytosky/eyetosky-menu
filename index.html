@@ -482,6 +482,16 @@ body::after{
   color:var(--text);
   white-space:nowrap;
 }
+.category-items .item-card .item-desc{
+  font-size:.6rem;
+  font-weight:300;
+  color:var(--text-dim);
+  letter-spacing:.3px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:200px;
+}
 .category-items .item-card .dots{
   flex:1;min-width:8px;
   height:1px;
@@ -769,7 +779,7 @@ const MENU_RAW = {
   smoothiesshakes:{label:"Smoothies & Shakes",icon:"🥤",items:[["𝓼𝓶𝓸𝓸𝓽𝓱𝓲𝓮𝓼",""],["strawberry","$5"],["mango","$5"],["tropical","$5.5"],["forest","$5"],["𝓼𝓱𝓪𝓴𝓮𝓼",""],["vanilla","$6"],["chocolate","$6"],["strawberry","$6"],["mango","$6"],["pinacolada virgin","$6"],["cookies","$6"],["cookies strawberry","$6"]]},
   tea:{label:"Tea",icon:"🍵",items:[["tea","$3"],["𝓲𝓬𝓮 𝓽𝓮𝓪",""],["peach","$4"],["lemon berry","$4"],["lemon passion","$4"]]},
   icecream:{label:"Ice Cream",icon:"🍦",items:[["diet king vanila","$2"],["diet king chocolate","$2"],["king crunchy","$2"],["king vanilla","$2"],["king chocolate","$2"],["paradiso cheescacke","$2"],["paradiso pistachio","$2"],["paradiso chocolate","$2"],["paradiso achta","$2"],["les saveurs chocolate fudge","$2"],["les saveurs cheesecake","$2"],["les saveurs achta","$2"],["les saveurs pistachio","$2"],["minimax vanilla","$1"],["minimax chocolate","$1"],["krazy kone vanilla","$1"],["krazy kone chocolate","$1"],["krazy kone strawberry","$1"],["tubby chocolate","$0.50"],["tubby vanilla","$0.50"],["tubby strawberry","$0.50"],["imperiale vanilla strawberry chocolate","$0.50"],["taxi vanilla","$0.50"],["princesse blackberry","$0.50"],["princesse strawberry","$0.50"],["flipper lemon","$0.50"],["flipper strawberry","$0.50"],["fuji vanilla","$0.50"],["fuji chocolate","$0.50"],["jolly blackberry","$0.50"],["jolly orange","$0.50"],["jolly chocolate","$0.50"],["jolly strawberry","$0.50"],["jolly blackberry diet","$0.50"],["jolly chocolate diet","$0.50"],["jolly lemon diet","$0.50"]]},
-  food:{label:"Food",icon:"🍔",items:[["𝓽𝓸 𝓼𝓱𝓪𝓻𝓮",""],["Mini burgers","$10"],["Mozzarella sticks","$6"],["Halloumi Bites, side sauce","$7"],["Jalapenos & cheddar bites, barbecue sauce","$7"],["French fries, house sauce","$5"],["Wedges, Aioli sauce","$6"],["Dynamite Chicken","$8"],["Crunchy Chicken bites, honey mustard sauce","$8"],["Nachos & Cheese","$10"],["𝓼𝓪𝓵𝓪𝓭𝓼",""],["Classic Caesar","$13"],["Watermelon & greek fetta","$15"],["Chili Crab Stick Salad","$14"],["Little green","$11"],["𝓫𝓾𝓻𝓰𝓮𝓻𝓼 & 𝓼𝓪𝓷𝓭𝔀𝓲𝓬𝓱𝓮𝓼",""],["Classic Cheese","$13"],["Big Man","$16"],["Truffle Joy","$14"],["Light Beef Burger","$13"],["Mighty Grilled Chicken","$13"],["Honey Mustard Chicken","$12"],["Hot Honey Chicken","$12"],["Steak & Mushroom","$14"],["Club Sandwich","$13"],["Taouk Wrap","$10"],["Chicken Fajitas","$12"],["𝓶𝓪𝓲𝓷 𝓬𝓸𝓾𝓻𝓼𝓮𝓼",""],["Grilled Chicken Breast","$16"],["Chicken Funghi","$18"],["Steak & Fries","$20"],["Crunchy Chicken Milanese","$14"],["Italian Chicken Parmigiana","$18"],["Golden Crispy Chicken platter","$14"]]},
+  food:{label:"Food",icon:"🍔",items:[["𝓽𝓸 𝓼𝓱𝓪𝓻𝓮",""],["Mini burgers","$10"],["Mozzarella sticks","$6"],["Halloumi Bites, side sauce","$7"],["Jalapenos & cheddar bites, barbecue sauce","$7"],["French fries, house sauce","$5"],["Wedges, Aioli sauce","$6"],["Dynamite Chicken","$8","Fried chicken breast topped with sweet & spicy sauce"],["Crunchy Chicken bites, honey mustard sauce","$8","Fried crispy chicken, honey mustard sauce"],["Nachos & Cheese","$10","Served with avocado sauce, tomato salsa"],["𝓼𝓪𝓵𝓪𝓭𝓼",""],["Classic Caesar","$13","Grilled chicken breast, crunchy lettuce, croutons, parmesan cheese"],["Watermelon & greek fetta","$15","Baby roca, glaze balsamic"],["Chili Crab Stick Salad","$14","Cucumber, iceberg, shredded carrots, little spicy mayo sauce"],["Little green","$11","Mix green leaves, cucumber, cherry tomato, slice raddish, lemon mustard sauce"],["𝓫𝓾𝓻𝓰𝓮𝓻𝓼 & 𝓼𝓪𝓷𝓭𝔀𝓲𝓬𝓱𝓮𝓼",""],["Classic Cheese","$13","Grilled beef, cheddar cheese, crispy bacon, house sauce, iceberg"],["Big Man","$16","Double beef burger, cheddar cheese, fried eggs & bacon"],["Truffle Joy","$14","Grilled beef, melted cheese, truffle mayo, baby roca"],["Light Beef Burger","$13","Mustard, iceberg, tomato, grilled potato, cereals bun"],["Mighty Grilled Chicken","$13","Grilled chicken breast, fried mozzarella, aioli sauce"],["Honey Mustard Chicken","$12","Fried chicken breast topped with honey mustard sauce, melted cheddar"],["Hot Honey Chicken","$12","Fried chicken breast glazed with spicy honey sauce, crunchy iceberg"],["Steak & Mushroom","$14","Grilled beef tenderloin, caramelized onion, fresh mushroom, melted cheese, mustard mayo sauce"],["Club Sandwich","$13","Grilled chicken breast, fried eggs, crispy ham & 2 cheese"],["Taouk Wrap","$10","Aioli sauce, pickles"],["Chicken Fajitas","$12","Side guacamole sauce"],["𝓶𝓪𝓲𝓷 𝓬𝓸𝓾𝓻𝓼𝓮𝓼",""],["Grilled Chicken Breast","$16","Mix green, grilled potato, honey mustard dip"],["Chicken Funghi","$18","Grilled chicken breast, creamy mushroom sauce, french fries"],["Steak & Fries","$20","Grilled beef tenderloin, forester sauce, french fries"],["Crunchy Chicken Milanese","$14","Mix green, french fries, gremolata mayo sauce"],["Italian Chicken Parmigiana","$18","Topped with tomato sauce, mozzarella & parmesan cheese, french fries"],["Golden Crispy Chicken platter","$14","French fries, mix green, side sauces"]]},
   "mixednuts&chips":{label:"Mixed Nuts & Chips",icon:"🥜",items:[["Wagyu Burger","$18"],["Truffle Fries","$9"],["Nachos","$10"],["Caesar Salad","$12"]]},
   soft:{label:"Soft Drinks",icon:"🥤",items:[["pepsi","$2"],["pepsi diet","$2"],["7UP","$2"],["7UP diet","$2"],["mirinda","$2"],["st.pelegrino","$3"],["lipton iced tea","$2"],["lipton iced tea diet","$2"],["redbull","$5"],["redbull light","$5"],["dark blue","$3"]]},
   tabaco:{label:"Tabaco",icon:"💨",items:[["Double Apple","$10"],["lemon mint","$10"],["Grape mint","$10"],["gum mint","$10"]]}
@@ -779,8 +789,8 @@ const DATA = [];
 const CATS = [];
 for (const [id, cat] of Object.entries(MENU_RAW)) {
   CATS.push({id, label:cat.label, icon:cat.icon});
-  cat.items.forEach(([name, price]) => {
-    DATA.push({name, cat:id, price:price === "" ? null : price, isHeader: price === ""});
+  cat.items.forEach(([name, price, desc]) => {
+    DATA.push({name, cat:id, price:price === "" ? null : price, desc: desc || "", isHeader: price === ""});
   });
 }
 
@@ -871,6 +881,7 @@ function openCategory(id){
       <div class="item-card" style="animation-delay:${i*0.04}s" data-name="${item.name}">
         <div class="item-card-left">
           <span class="name">${item.name}</span>
+          ${item.desc ? `<span class="item-desc">${item.desc}</span>` : ""}
           <span class="dots"></span>
         </div>
         <span class="price">${item.price}</span>
@@ -898,7 +909,7 @@ function openModal(item){
   document.getElementById("modalCat").textContent = CATS.find(c=>c.id===item.cat)?.label||"";
   document.getElementById("modalName").textContent = item.name;
   document.getElementById("modalPrice").textContent = item.price || "";
-  document.getElementById("modalDesc").textContent = "";
+  document.getElementById("modalDesc").textContent = item.desc || "";
   document.getElementById("modalOverlay").classList.add("active");
   document.body.style.overflow = "hidden";
 
